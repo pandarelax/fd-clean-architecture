@@ -8,7 +8,7 @@ public class TodoItem : BaseAuditableEntity
 
     public string? Note { get; set; }
 
-    public string? BackgroundColour { get; set; }
+    public Colour? BackgroundColour { get; set; }
 
     public PriorityLevel Priority { get; set; }
 

@@ -18,9 +18,13 @@ public class TodoItemDto : IMapFrom<TodoItem>
 
     public string? Note { get; set; }
 
+    public string? BackgroundColour { get; set; }
+
     public void Mapping(Profile profile)
     {
         profile.CreateMap<TodoItem, TodoItemDto>()
             .ForMember(d => d.Priority, opt => opt.MapFrom(s => (int)s.Priority));
+        profile.CreateMap<TodoItemDto, TodoItem>()
+            .ForMember(d => d.BackgroundColour, opt => opt.MapFrom(s => s.BackgroundColour));
     }
 }
