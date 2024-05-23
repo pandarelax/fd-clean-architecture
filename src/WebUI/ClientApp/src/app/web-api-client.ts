@@ -1057,60 +1057,65 @@ export interface ITodoListDto {
 }
 
 export class TodoItemDto implements ITodoItemDto {
-    id?: number;
-    listId?: number;
-    title?: string | undefined;
-    done?: boolean;
-    priority?: number;
-    note?: string | undefined;
+  id?: number;
+  listId?: number;
+  title?: string | undefined;
+  backgroundColour?: string | undefined;
+  done?: boolean;
+  priority?: number;
+  note?: string | undefined;
 
-    constructor(data?: ITodoItemDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: ITodoItemDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.listId = _data["listId"];
-            this.title = _data["title"];
-            this.done = _data["done"];
-            this.priority = _data["priority"];
-            this.note = _data["note"];
-        }
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.listId = _data['listId'];
+      this.title = _data['title'];
+      this.backgroundColour = _data['backgroundColour'];
+      this.done = _data['done'];
+      this.priority = _data['priority'];
+      this.note = _data['note'];
     }
+  }
 
-    static fromJS(data: any): TodoItemDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new TodoItemDto();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): TodoItemDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new TodoItemDto();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["listId"] = this.listId;
-        data["title"] = this.title;
-        data["done"] = this.done;
-        data["priority"] = this.priority;
-        data["note"] = this.note;
-        return data;
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['listId'] = this.listId;
+    data['title'] = this.title;
+    data['backgroundColour'] = this.colour;
+    data['done'] = this.done;
+    data['priority'] = this.priority;
+    data['note'] = this.note;
+    return data;
+  }
 }
 
 export interface ITodoItemDto {
-    id?: number;
-    listId?: number;
-    title?: string | undefined;
-    done?: boolean;
-    priority?: number;
-    note?: string | undefined;
+  id?: number;
+  listId?: number;
+  title?: string | undefined;
+  backgroundColour?: string | undefined;
+  done?: boolean;
+  priority?: number;
+  note?: string | undefined;
 }
+
 
 export class CreateTodoListCommand implements ICreateTodoListCommand {
     title?: string | undefined;

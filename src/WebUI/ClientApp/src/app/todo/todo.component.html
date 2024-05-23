@@ -124,6 +124,12 @@
         </select>
       </div>
       <div class="form-group">
+        <label for="colour">Priority</label>
+        <select class="form-control" formControlName="colour">
+          <option [ngValue]="level.value" *ngFor="let level of priorityLevels">{{ level.name }}</option>
+        </select>
+        </div>
+        <div class="form-group">
         <label for="note">Note</label>
         <textarea id="note" class="form-control" rows="3" formControlName="note"></textarea>
       </div>
