@@ -1098,7 +1098,7 @@ export class TodoItemDto implements ITodoItemDto {
     data['id'] = this.id;
     data['listId'] = this.listId;
     data['title'] = this.title;
-    data['backgroundColour'] = this.colour;
+    data['backgroundColour'] = this.backgroundColour;
     data['done'] = this.done;
     data['priority'] = this.priority;
     data['note'] = this.note;
