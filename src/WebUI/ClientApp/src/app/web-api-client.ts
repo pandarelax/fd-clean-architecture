@@ -854,6 +854,7 @@ export class UpdateTodoItemDetailCommand implements IUpdateTodoItemDetailCommand
     listId?: number;
     priority?: PriorityLevel;
     note?: string | undefined;
+    backgroundColour?: Colour | undefined;
 
     constructor(data?: IUpdateTodoItemDetailCommand) {
         if (data) {
@@ -870,6 +871,7 @@ export class UpdateTodoItemDetailCommand implements IUpdateTodoItemDetailCommand
             this.listId = _data["listId"];
             this.priority = _data["priority"];
             this.note = _data["note"];
+            this.backgroundColour = _data["backgroundColour"] ? Colour.fromJS(_data["backgroundColour"]) : <any>undefined;
         }
     }
 
@@ -886,6 +888,7 @@ export class UpdateTodoItemDetailCommand implements IUpdateTodoItemDetailCommand
         data["listId"] = this.listId;
         data["priority"] = this.priority;
         data["note"] = this.note;
+        data["backgroundColour"] = this.backgroundColour ? this.backgroundColour.toJSON() : <any>undefined;
         return data;
     }
 }
@@ -895,6 +898,7 @@ export interface IUpdateTodoItemDetailCommand {
     listId?: number;
     priority?: PriorityLevel;
     note?: string | undefined;
+    backgroundColour?: Colour | undefined;
 }
 
 export enum PriorityLevel {
@@ -902,6 +906,67 @@ export enum PriorityLevel {
     Low = 1,
     Medium = 2,
     High = 3,
+}
+
+export abstract class ValueObject implements IValueObject {
+
+    constructor(data?: IValueObject) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): ValueObject {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'ValueObject' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data;
+    }
+}
+
+export interface IValueObject {
+}
+
+export class Colour extends ValueObject implements IColour {
+    code?: string;
+
+    constructor(data?: IColour) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.code = _data["code"];
+        }
+    }
+
+    static override fromJS(data: any): Colour {
+        data = typeof data === 'object' ? data : {};
+        let result = new Colour();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IColour extends IValueObject {
+    code?: string;
 }
 
 export class TodosVm implements ITodosVm {
@@ -1057,65 +1122,64 @@ export interface ITodoListDto {
 }
 
 export class TodoItemDto implements ITodoItemDto {
-  id?: number;
-  listId?: number;
-  title?: string | undefined;
-  backgroundColour?: string | undefined;
-  done?: boolean;
-  priority?: number;
-  note?: string | undefined;
+    id?: number;
+    listId?: number;
+    title?: string | undefined;
+    done?: boolean;
+    priority?: number;
+    note?: string | undefined;
+    backgroundColour?: string | undefined;
 
-  constructor(data?: ITodoItemDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
+    constructor(data?: ITodoItemDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data['id'];
-      this.listId = _data['listId'];
-      this.title = _data['title'];
-      this.backgroundColour = _data['backgroundColour'];
-      this.done = _data['done'];
-      this.priority = _data['priority'];
-      this.note = _data['note'];
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.listId = _data["listId"];
+            this.title = _data["title"];
+            this.done = _data["done"];
+            this.priority = _data["priority"];
+            this.note = _data["note"];
+            this.backgroundColour = _data["backgroundColour"];
+        }
     }
-  }
 
-  static fromJS(data: any): TodoItemDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new TodoItemDto();
-    result.init(data);
-    return result;
-  }
+    static fromJS(data: any): TodoItemDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TodoItemDto();
+        result.init(data);
+        return result;
+    }
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['id'] = this.id;
-    data['listId'] = this.listId;
-    data['title'] = this.title;
-    data['backgroundColour'] = this.backgroundColour;
-    data['done'] = this.done;
-    data['priority'] = this.priority;
-    data['note'] = this.note;
-    return data;
-  }
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["listId"] = this.listId;
+        data["title"] = this.title;
+        data["done"] = this.done;
+        data["priority"] = this.priority;
+        data["note"] = this.note;
+        data["backgroundColour"] = this.backgroundColour;
+        return data;
+    }
 }
 
 export interface ITodoItemDto {
-  id?: number;
-  listId?: number;
-  title?: string | undefined;
-  backgroundColour?: string | undefined;
-  done?: boolean;
-  priority?: number;
-  note?: string | undefined;
+    id?: number;
+    listId?: number;
+    title?: string | undefined;
+    done?: boolean;
+    priority?: number;
+    note?: string | undefined;
+    backgroundColour?: string | undefined;
 }
-
 
 export class CreateTodoListCommand implements ICreateTodoListCommand {
     title?: string | undefined;
