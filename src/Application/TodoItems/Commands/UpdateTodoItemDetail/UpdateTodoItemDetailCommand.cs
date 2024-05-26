@@ -17,7 +17,7 @@ public record UpdateTodoItemDetailCommand : IRequest
 
     public string? Note { get; init; }
 
-    public Colour? BackgroundColour { get; set; }
+    public string? BackgroundColour { get; init; }
 }
 
 public class UpdateTodoItemDetailCommandHandler : IRequestHandler<UpdateTodoItemDetailCommand>

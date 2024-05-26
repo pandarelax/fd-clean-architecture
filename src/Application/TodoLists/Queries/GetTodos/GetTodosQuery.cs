@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Todo_App.Application.Common.Interfaces;
 using Todo_App.Domain.Enums;
+using Todo_App.Domain.ValueObjects;
 
 namespace Todo_App.Application.TodoLists.Queries.GetTodos;
 
@@ -27,6 +28,10 @@ public class GetTodosQueryHandler : IRequestHandler<GetTodosQuery, TodosVm>
             PriorityLevels = Enum.GetValues(typeof(PriorityLevel))
                 .Cast<PriorityLevel>()
                 .Select(p => new PriorityLevelDto { Value = (int)p, Name = p.ToString() })
+                .ToList(),
+
+            Colours = Colour.SupportedColours
+                .Select(c => new BackgroundColourDto { Code = c.Code, Name = c.GetName() })
                 .ToList(),
 
             Lists = await _context.TodoLists
