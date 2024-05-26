@@ -13,6 +13,7 @@ import {
   UpdateTodoItemDetailCommand,
   TagDto,
 } from '../web-api-client';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-todo-component',
@@ -30,6 +31,7 @@ export class TodoComponent implements OnInit {
   selectedList: TodoListDto;
   selectedItem: TodoItemDto;
   selectedItemTags: TagDto[];
+  tagsFilter: number[];
   newListEditor: any = {};
   listOptionsEditor: any = {};
   newListModalRef: BsModalRef;
@@ -48,11 +50,27 @@ export class TodoComponent implements OnInit {
     private listsClient: TodoListsClient,
     private itemsClient: TodoItemsClient,
     private modalService: BsModalService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.listsClient.get().subscribe(
+    this.route.queryParams.subscribe((params) => {
+      if (params['tags']) {
+        this.tagsFilter = params['tags']
+          .split(',')
+          .map((tag: string) => parseInt(tag, 10));
+      } else {
+        this.tagsFilter = [];
+      }
+    });
+
+    this.initTodoLists(this.tagsFilter);
+  }
+
+  initTodoLists(filters?: number[]): void {
+    this.listsClient.get(filters).subscribe(
       (result) => {
         this.lists = result.lists;
         this.priorityLevels = result.priorityLevels;
@@ -179,6 +197,38 @@ export class TodoComponent implements OnInit {
       },
       (error) => console.error(error)
     );
+  }
+
+  setTagFilter(event: any, tagId: number) {
+    if (event.target.checked) {
+      // Checkbox işaretlendiyse, tag id'yi listeye ekleyin
+      this.tagsFilter?.push(tagId);
+    } else {
+      // Checkbox işaret kaldırıldıysa, tag id'yi listeden çıkarın
+      this.tagsFilter = this.tagsFilter?.filter((id) => id !== tagId);
+    }
+
+    this.updateUrlParams();
+  }
+
+  updateUrlParams(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        tags: this.tagsFilter?.length ? this.tagsFilter?.join(',') : null,
+      },
+      queryParamsHandling: 'merge',
+    });
+
+    this.initTodoLists(this.tagsFilter);
+  }
+
+  clearTagFilters() {
+    this.tagsFilter = [];
+  }
+
+  removeTagFilter(tagId: number) {
+    this.tagsFilter = this.tagsFilter.filter((t) => t !== tagId);
   }
 
   removeTag(tagId?: number) {

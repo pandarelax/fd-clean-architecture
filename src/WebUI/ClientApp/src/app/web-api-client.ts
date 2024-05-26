@@ -307,7 +307,7 @@ export class TodoItemsClient implements ITodoItemsClient {
 }
 
 export interface ITodoListsClient {
-    get(): Observable<TodosVm>;
+    get(tags: number[] | null | undefined): Observable<TodosVm>;
     create(command: CreateTodoListCommand): Observable<number>;
     get2(id: number): Observable<FileResponse>;
     update(id: number, command: UpdateTodoListCommand): Observable<FileResponse>;
@@ -327,8 +327,10 @@ export class TodoListsClient implements ITodoListsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    get(): Observable<TodosVm> {
-        let url_ = this.baseUrl + "/api/TodoLists";
+    get(tags: number[] | null | undefined): Observable<TodosVm> {
+        let url_ = this.baseUrl + "/api/TodoLists?";
+        if (tags !== undefined && tags !== null)
+            tags && tags.forEach(item => { url_ += "tags=" + encodeURIComponent("" + item) + "&"; });
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1119,7 +1121,7 @@ export class TodoItemDto implements ITodoItemDto {
     done?: boolean;
     priority?: number;
     note?: string | undefined;
-    tagId?: number;
+    tagId?: number | undefined;
 
     constructor(data?: ITodoItemDto) {
         if (data) {
@@ -1169,7 +1171,7 @@ export interface ITodoItemDto {
     done?: boolean;
     priority?: number;
     note?: string | undefined;
-    tagId?: number;
+    tagId?: number | undefined;
 }
 
 export class CreateTodoListCommand implements ICreateTodoListCommand {

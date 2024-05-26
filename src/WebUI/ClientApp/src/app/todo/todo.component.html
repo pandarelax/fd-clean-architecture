@@ -37,7 +37,13 @@
     </div>
     <div class="col-sm-8" *ngIf="selectedList">
       <div class="clearfix">
-        <h2 class="float-start">{{ selectedList.title }}</h2>
+        <div class="d-flex align-items-center justify-content-between">
+          <h2 class="float-start">{{ selectedList.title }}</h2>
+        <div *ngFor="let tag of tags">
+          <input type="checkbox" name="tagFilter" id="tagFilter" [checked]="tagsFilter?.includes(tag.id)" [value]="tag.id" (change)="setTagFilter($event, tag.id)">
+          <label for="tagFilter">{{tag.name}}</label>
+        </div>
+        </div>
         <button
           id="listOptions"
           class="btn btn-default float-end"
@@ -195,9 +201,13 @@
       </div>
       <p>Tags</p>
       <div *ngIf="selectedItem.tagId">
-        <div *ngFor="let tag of selectedItemTags" class="border rounded d-flex gap-2 justify-content-between px-2" style="width: 100px;">
+        <div
+          *ngFor="let tag of selectedItemTags"
+          class="border rounded d-flex gap-2 justify-content-between px-2"
+          style="width: 100px"
+        >
           {{ tag.name }}
-          <span (click)="removeTag()" style="cursor: pointer;">X</span>
+          <span (click)="removeTag()" style="cursor: pointer">X</span>
         </div>
       </div>
       <div class="form-group">

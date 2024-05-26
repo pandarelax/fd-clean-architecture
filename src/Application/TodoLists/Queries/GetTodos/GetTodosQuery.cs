@@ -7,7 +7,7 @@ using Todo_App.Domain.Enums;
 
 namespace Todo_App.Application.TodoLists.Queries.GetTodos;
 
-public record GetTodosQuery : IRequest<TodosVm>;
+public record GetTodosQuery(IList<int>? TagIds) : IRequest<TodosVm>;
 
 public class GetTodosQueryHandler : IRequestHandler<GetTodosQuery, TodosVm>
 {
@@ -22,6 +22,33 @@ public class GetTodosQueryHandler : IRequestHandler<GetTodosQuery, TodosVm>
 
     public async Task<TodosVm> Handle(GetTodosQuery request, CancellationToken cancellationToken)
     {
+        var todoListsQuery = _context.TodoLists
+            .AsNoTracking()
+            .Include(tl => tl.Items)
+            .ThenInclude(ti => ti.Tag)
+            .AsQueryable();
+
+        var filteredTodoLists = await todoListsQuery
+            .Select(tl => new TodoListDto
+            {
+                Id = tl.Id,
+                Title = tl.Title,
+                Items = tl.Items
+                    .Where(ti => request.TagIds == null || !request.TagIds.Any() || request.TagIds.Contains(ti.TagId ?? 0))
+                    .Select(ti => new TodoItemDto
+                    {
+                        Id = ti.Id,
+                        Title = ti.Title,
+                        Note = ti.Note,
+                        TagId = ti.TagId,
+                        ListId = ti.ListId,
+                        Done = ti.Done,
+                    })
+                    .ToList()
+            })
+            .OrderBy(tl => tl.Title)
+            .ToListAsync(cancellationToken);
+
         return new TodosVm
         {
             PriorityLevels = Enum.GetValues(typeof(PriorityLevel))
@@ -35,11 +62,7 @@ public class GetTodosQueryHandler : IRequestHandler<GetTodosQuery, TodosVm>
                 .OrderBy(t => t.Name)
                 .ToListAsync(cancellationToken),
 
-            Lists = await _context.TodoLists
-                .AsNoTracking()
-                .ProjectTo<TodoListDto>(_mapper.ConfigurationProvider)
-                .OrderBy(t => t.Title)
-                .ToListAsync(cancellationToken)
+            Lists = filteredTodoLists
         };
     }
 }

@@ -18,7 +18,7 @@ public class TodoItemDto : IMapFrom<TodoItem>
 
     public string? Note { get; set; }
 
-    public int TagId { get; set; }
+    public int? TagId { get; set; }
 
     public void Mapping(Profile profile)
     {
