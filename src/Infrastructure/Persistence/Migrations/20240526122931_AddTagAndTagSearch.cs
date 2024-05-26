@@ -10,7 +10,7 @@ namespace Todo_App.Infrastructure.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Tag",
+                name: "Tags",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -23,11 +23,11 @@ namespace Todo_App.Infrastructure.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tag", x => x.Id);
+                    table.PrimaryKey("PK_Tags", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TagTodoItem",
+                name: "TagTodoItems",
                 columns: table => new
                 {
                     TagsId = table.Column<int>(type: "int", nullable: false),
@@ -35,11 +35,11 @@ namespace Todo_App.Infrastructure.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TagTodoItem", x => new { x.TagsId, x.TodoItemsId });
+                    table.PrimaryKey("PK_TagTodoItems", x => new { x.TagsId, x.TodoItemsId });
                     table.ForeignKey(
-                        name: "FK_TagTodoItem_Tag_TagsId",
+                        name: "FK_TagTodoItem_Tags_TagsId",
                         column: x => x.TagsId,
-                        principalTable: "Tag",
+                        principalTable: "Tags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -52,17 +52,17 @@ namespace Todo_App.Infrastructure.Persistence.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_TagTodoItem_TodoItemsId",
-                table: "TagTodoItem",
+                table: "TagTodoItems",
                 column: "TodoItemsId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "TagTodoItem");
+                name: "TagTodoItems");
 
             migrationBuilder.DropTable(
-                name: "Tag");
+                name: "Tags");
         }
     }
 }

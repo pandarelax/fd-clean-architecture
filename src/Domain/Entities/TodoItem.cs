@@ -12,7 +12,9 @@ public class TodoItem : BaseAuditableEntity
 
     public DateTime? Reminder { get; set; }
 
-    public ICollection<Tag> Tags { get; set; } = new List<Tag>();
+    public int? TagId { get; set; }
+
+    public Tag? Tag { get; set; }
 
     private bool _done;
     public bool Done

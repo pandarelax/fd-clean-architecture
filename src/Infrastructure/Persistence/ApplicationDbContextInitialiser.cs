@@ -87,5 +87,14 @@ public class ApplicationDbContextInitialiser
 
             await _context.SaveChangesAsync();
         }
+
+        if (!_context.Tags.Any())
+        {
+            _context.Tags.Add(new Tag { Name = "Urgent" });
+            _context.Tags.Add(new Tag { Name = "Home" });
+            _context.Tags.Add(new Tag { Name = "Work" });
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

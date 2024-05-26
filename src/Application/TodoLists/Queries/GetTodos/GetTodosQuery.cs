@@ -30,6 +30,7 @@ public class GetTodosQueryHandler : IRequestHandler<GetTodosQuery, TodosVm>
                 .ToList(),
 
             Tags = await _context.Tags
+                .AsNoTracking()
                 .ProjectTo<TagDto>(_mapper.ConfigurationProvider)
                 .OrderBy(t => t.Name)
                 .ToListAsync(cancellationToken),

@@ -12,8 +12,8 @@ using Todo_App.Infrastructure.Persistence;
 namespace Todo_App.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240526122931_AddTagAndTagSearch")]
-    partial class AddTagAndTagSearch
+    [Migration("20240526135426_AddTagAndTagSearchTables")]
+    partial class AddTagAndTagSearchTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -314,7 +314,7 @@ namespace Todo_App.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("TodoItemsId");
 
-                    b.ToTable("TagTodoItems");
+                    b.ToTable("TagTodoItem");
                 });
 
             modelBuilder.Entity("Todo_App.Domain.Entities.Tag", b =>
@@ -342,27 +342,38 @@ namespace Todo_App.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Created = new DateTime(2024, 5, 26, 12, 29, 31, 0, DateTimeKind.Unspecified),
-                            Name = "Work"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Created = new DateTime(2024, 5, 26, 12, 29, 31, 0, DateTimeKind.Unspecified),
-                            Name = "Personal"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Created = new DateTime(2024, 5, 26, 12, 29, 31, 0, DateTimeKind.Unspecified),
-                            Name = "Social"
-                        });
-
                     b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("Todo_App.Domain.Entities.TagSearch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SearchCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TagSearches");
                 });
 
             modelBuilder.Entity("Todo_App.Domain.Entities.TodoItem", b =>
