@@ -15,8 +15,13 @@ public class Colour : ValueObject
         Code = code;
     }
 
-    public static Colour From(string code)
+    public static Colour From(string? code)
     {
+        if (string.IsNullOrWhiteSpace(code))
+        {
+            return White;
+        }
+
         var colour = new Colour { Code = code };
 
         if (!SupportedColours.Contains(colour))
@@ -25,6 +30,31 @@ public class Colour : ValueObject
         }
 
         return colour;
+    }
+
+    public string GetName()
+    {
+        switch (Code)
+        {
+            case "#FFFFFF":
+                return "White";
+            case "#FF5733":
+                return "Red";
+            case "#FFC300":
+                return "Orange";
+            case "#FFFF66":
+                return "Yellow";
+            case "#CCFF99 ":
+                return "Green";
+            case "#6666FF":
+                return "Blue";
+            case "#9966CC":
+                return "Purple";
+            case "#999999":
+                return "Grey";
+            default:
+                return "Unknown";
+        }
     }
 
     public static Colour White => new("#FFFFFF");
@@ -60,7 +90,7 @@ public class Colour : ValueObject
         return Code;
     }
 
-    protected static IEnumerable<Colour> SupportedColours
+    public static IEnumerable<Colour> SupportedColours
     {
         get
         {

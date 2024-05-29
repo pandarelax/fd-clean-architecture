@@ -490,6 +490,10 @@
           "note": {
             "type": "string",
             "nullable": true
+          },
+          "backgroundColour": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -519,6 +523,12 @@
               "$ref": "#/components/schemas/PriorityLevelDto"
             }
           },
+          "colours": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BackgroundColourDto"
+            }
+          },
           "lists": {
             "type": "array",
             "items": {
@@ -534,6 +544,20 @@
           "value": {
             "type": "integer",
             "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "BackgroundColourDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "nullable": true
           },
           "name": {
             "type": "string",
@@ -589,6 +613,10 @@
             "format": "int32"
           },
           "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "backgroundColour": {
             "type": "string",
             "nullable": true
           }
