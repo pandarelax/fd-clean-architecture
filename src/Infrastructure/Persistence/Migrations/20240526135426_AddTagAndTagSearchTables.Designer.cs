@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Todo_App.Infrastructure.Persistence;
 
@@ -11,9 +12,10 @@ using Todo_App.Infrastructure.Persistence;
 namespace Todo_App.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240526135426_AddTagAndTagSearchTables")]
+    partial class AddTagAndTagSearchTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -300,6 +302,21 @@ namespace Todo_App.Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("TagTodoItem", b =>
+                {
+                    b.Property<int>("TagsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TodoItemsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TagsId", "TodoItemsId");
+
+                    b.HasIndex("TodoItemsId");
+
+                    b.ToTable("TagTodoItem");
+                });
+
             modelBuilder.Entity("Todo_App.Domain.Entities.Tag", b =>
                 {
                     b.Property<int>("Id")
@@ -395,9 +412,6 @@ namespace Todo_App.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("Reminder")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("TagId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -406,8 +420,6 @@ namespace Todo_App.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ListId");
-
-                    b.HasIndex("TagId");
 
                     b.ToTable("TodoItems");
                 });
@@ -558,6 +570,21 @@ namespace Todo_App.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TagTodoItem", b =>
+                {
+                    b.HasOne("Todo_App.Domain.Entities.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Todo_App.Domain.Entities.TodoItem", null)
+                        .WithMany()
+                        .HasForeignKey("TodoItemsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Todo_App.Domain.Entities.TodoItem", b =>
                 {
                     b.HasOne("Todo_App.Domain.Entities.TodoList", "List")
@@ -566,13 +593,7 @@ namespace Todo_App.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Todo_App.Domain.Entities.Tag", "Tag")
-                        .WithMany("TodoItems")
-                        .HasForeignKey("TagId");
-
                     b.Navigation("List");
-
-                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("Todo_App.Domain.Entities.TodoList", b =>
@@ -596,11 +617,6 @@ namespace Todo_App.Infrastructure.Persistence.Migrations
 
                     b.Navigation("Colour")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Todo_App.Domain.Entities.Tag", b =>
-                {
-                    b.Navigation("TodoItems");
                 });
 
             modelBuilder.Entity("Todo_App.Domain.Entities.TodoList", b =>
