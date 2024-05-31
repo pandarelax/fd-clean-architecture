@@ -10,9 +10,9 @@ namespace Todo_App.WebUI.Controllers;
 public class TodoListsController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<TodosVm>> Get()
+    public async Task<ActionResult<TodosVm>> Get([FromQuery] IList<int> tags)
     {
-        return await Mediator.Send(new GetTodosQuery());
+        return await Mediator.Send(new GetTodosQuery(tags));
     }
 
     [HttpGet("{id}")]

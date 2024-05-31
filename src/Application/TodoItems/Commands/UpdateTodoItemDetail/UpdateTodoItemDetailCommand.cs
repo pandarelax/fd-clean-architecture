@@ -15,6 +15,8 @@ public record UpdateTodoItemDetailCommand : IRequest
     public PriorityLevel Priority { get; init; }
 
     public string? Note { get; init; }
+
+    public int? TagId { get; init; }
 }
 
 public class UpdateTodoItemDetailCommandHandler : IRequestHandler<UpdateTodoItemDetailCommand>
@@ -36,9 +38,12 @@ public class UpdateTodoItemDetailCommandHandler : IRequestHandler<UpdateTodoItem
             throw new NotFoundException(nameof(TodoItem), request.Id);
         }
 
+        var tag = await _context.Tags.FindAsync(request.TagId);
+
         entity.ListId = request.ListId;
         entity.Priority = request.Priority;
         entity.Note = request.Note;
+        entity.Tag = tag;
 
         await _context.SaveChangesAsync(cancellationToken);
 
